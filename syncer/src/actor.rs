@@ -1620,6 +1620,13 @@ where
                         "finalized block does not match the stored finalization for its \
                          height; local archive inconsistency, halting dispatch"
                     );
+                    #[cfg(feature = "prom")]
+                    counter!(
+                        "critical_errors_total",
+                        "reason" => "archive_inconsistency",
+                        "severity" => "critical"
+                    )
+                    .increment(1);
                     return;
                 }
 
@@ -1857,6 +1864,13 @@ where
                 "finalized-block archive already holds a different block at this \
                  height; refusing to store a mismatched finalization"
             );
+            #[cfg(feature = "prom")]
+            counter!(
+                "critical_errors_total",
+                "reason" => "archive_inconsistency",
+                "severity" => "critical"
+            )
+            .increment(1);
             return false;
         }
 
